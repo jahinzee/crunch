@@ -3,11 +3,7 @@ Compile and run C files with one quick "crunch"!
 
 ## Disclaimer
 
-This script was developed as a quick bodge, for my
-university's C practicals. This is probably not
-the most secure, practical, or otherwise "good"
-way to do this type of thing, and if you need to,
-it's probably best to use an IDE.
+This script was developed as a quick bodge, for my university's C practicals. This is probably not the most secure, practical, or otherwise "good" way to do this type of thing, and if you need to use something like this for a production environment, it's probably best to use an IDE.
 
 ## Usage:
 
