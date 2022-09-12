@@ -1,0 +1,100 @@
+#!/usr/bin/bash
+
+# * crunch
+#   Compile and run C files with one quick "crunch"!
+#
+# = AUTHOR:
+#   jahinzee <jahinzee@outlook.com>
+#
+# = DISCLAIMER:
+#   This script was developed as a quick bodge, for my
+#   university's C practicals. This is probably not
+#   the most secure, practical, or otherwise "good"
+#   way to do this type of thing, and if you need to,
+#   it's probably best to use an IDE.
+# 
+# = LICENSE:
+#   This program is free software: you can redistribute it
+#   and/or modify it under the terms of the GNU General
+#   Public License as published by the Free Software
+#   Foundation, either version 3 of the License, or (at
+#   your option) any later version.
+# 
+#   This program is distributed in the hope that it will be
+#   useful, but WITHOUT ANY WARRANTY; without even the
+#   implied warranty of MERCHANTABILITY or FITNESS FOR A
+#   PARTICULAR PURPOSE. See the GNU General Public License
+#   for more details.
+#
+#   You should have received a copy of the GNU General
+#   Public License along with this # program. If not, see
+#   <https://www.gnu.org/licenses/>. 
+
+
+# * config 
+#   Change these variables as needed.
+# 
+# = Extension for compiled files
+#   Example: out : foo.c -> foo.c.out
+    _COMPILE_EXT="out"
+# 
+
+
+usage () {
+  printf "Usage:\n"
+  printf " * crunch <filename> (r/q)\n";
+  printf "   - r: Execute output file.\n";
+  printf "   - q: Exit crunch without executing the file.\n";
+  printf " * crunch --help\n";
+}
+
+print_status() {
+  printf "crunch: $1\n";
+}
+
+post_comp() {
+  CMD=$1
+  if [ -z "$CMD" ]
+  then
+    printf "What would you like to do with $FILENAME.$_COMPILE_EXT? (r/q)? "
+    read -n1;
+    CMD=$REPLY
+	fi
+	case $CMD in
+		[Rr]* ) printf "\n"; exec "./$FILENAME.$_COMPILE_EXT";;
+		[Qq]* ) printf "\n"; exit;;
+		* ) exit;;
+	esac            
+}
+
+if [ -z "$1" ]
+then
+	print_status "Invalid parameters.";
+	usage;
+	exit 1;
+fi
+
+if [[ $1 == "--help" ]];
+then
+  usage;
+  exit 0;
+fi
+
+FILENAME=$1;
+OUTPUT=$(gcc "./$FILENAME" -o "$FILENAME.$_COMPILE_EXT")
+
+if [[ $? -ne 0 ]];
+then
+  print_status "error: gcc compilation error.";
+  exit 1;
+else
+  print_status "gcc compilation successful.";
+fi
+
+if [[ ! -z $OUTPUT ]]
+then
+  print_status "gcc has some warnings or additional outputs.";
+fi
+
+post_comp $2
+exit 0;
