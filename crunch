@@ -20,7 +20,7 @@
 # 
 # - Default compiler
 #   Supported: gcc, clang
-    _COMPILER="clang"
+    _COMPILER="gcc"
 
 
 usage () {
