@@ -1,36 +1,14 @@
 #!/usr/bin/bash
 
-# * crunch
-#   Compile and run C files with one quick "crunch"!
+# crunch
+# Compile and run C files with one quick "crunch"!
 #
-# = AUTHOR:
-#   jahinzee <jahinzee@outlook.com>
+# Author:   jahinzee <jahinzee@outlook.com>
 #
-# = DISCLAIMER:
-#   This script was developed as a quick bodge,
-#   something to make writing and testing C code
-#   easier for me. This is probably not the most
-#   secure, practical, or otherwise "good" way to
-#   do this type of thing, and if you need to use
-#   something like this for a production environment,
-#   it's probably best to use an IDE.
+# Please read the README file.
+# tl;dr: This is a bodge; it is incredibly finicky and probably will break if you look at it the wrong way. Use at your own risk! 
 # 
-# = LICENSE:
-#   This program is free software: you can redistribute it
-#   and/or modify it under the terms of the GNU General
-#   Public License as published by the Free Software
-#   Foundation, either version 3 of the License, or (at
-#   your option) any later version.
-# 
-#   This program is distributed in the hope that it will be
-#   useful, but WITHOUT ANY WARRANTY; without even the
-#   implied warranty of MERCHANTABILITY or FITNESS FOR A
-#   PARTICULAR PURPOSE. See the GNU General Public License
-#   for more details.
-#
-#   You should have received a copy of the GNU General
-#   Public License along with this # program. If not, see
-#   <https://www.gnu.org/licenses/>. 
+# This script is licensed under GPL v3. <https://www.gnu.org/licenses/gpl-3,0.html>
 
 
 # * config 
