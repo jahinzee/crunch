@@ -20,7 +20,7 @@
 # 
 # - Default compiler
 #   Supported: gcc, clang
-    _COMPILER="gcc"
+    _COMPILER="clang"
 
 
 usage () {
@@ -35,21 +35,13 @@ print_status() {
   printf "crunch: $1\n";
 }
 
-compile() {
-  if [[ "$_COMPILER" =~ ^("gcc"|"clang")$ ]];
-  then
-    if [ -z $(command -v $_COMPILER) ];
-    then
-      print_status "error: $_COMPILER does not exist on your system."
-      exit 1
-    fi
-    OUTPUT = "./$FILENAME" -o "$FILENAME.$_COMPILE_EXT"
-    echo $?
-  
-  else
-    print_status "error: Invalid config value (_COMPILE is \"$_COMPILER\"). Check the script file for errors."
-    exit 1;
-  fi
+print_error() {
+  print_status "error: $1";
+  exit 1
+}
+
+print_config_error() {
+  print_error "Invalid config value on $1. Check the script file for errors."
 }
 
 post_comp() {
@@ -69,13 +61,13 @@ post_comp() {
 
 if [ -z _COMPILE_EXT ];
 then
-  print_status "error: Invalid config value (_COMPILE_EXT is \"$_COMPILE_EXT\"). Check the script file for errors."
+  print_config_error "_COMPILE_EXT"
   exit 1;
 fi
 
 if [ -z "$1" ];
 then
-	print_status "Invalid parameters.";
+	print_error "Invalid parameters.";
 	usage;
 	exit 1;
 fi
@@ -87,11 +79,24 @@ then
 fi
 
 FILENAME=$1;
-compile
+
+  if [[ "$_COMPILER" =~ ^("gcc"|"clang")$ ]];
+  then
+    if [ -z $(command -v $_COMPILER) ];
+    then
+      print_error "$_COMPILER does not exist on your system."
+      exit 1
+    fi
+    $_COMPILER "./$FILENAME" -o "$FILENAME.$_COMPILE_EXT"
+    OUTPUT=$?
+  else
+    print_config_error "_COMPILER"
+    exit 1;
+  fi
 
 if [[ $OUTPUT -ne 0 ]];
 then
-  print_status "error: Compilation error.";
+  print_error "Compilation error.";
   exit 1;
 else
   print_status "Compilation successful.";
