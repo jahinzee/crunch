@@ -4,20 +4,23 @@
 # Compile and run C files with one quick "crunch"!
 #
 # Author:   jahinzee <jahinzee@outlook.com>
-#
+# 
 # Please read the README file.
 # tl;dr: This is a bodge; it is incredibly finicky and probably will break if you look at it the wrong way. Use at your own risk! 
-# 
+#
 # This script is licensed under GPL v3. <https://www.gnu.org/licenses/gpl-3,0.html>
 
 
-# * config 
-#   Change these variables as needed.
+# -- config --
+# Change these variables as needed.
 # 
-# = Extension for compiled files
+# - Extension for compiled files
 #   Example: out : foo.c -> foo.c.out
     _COMPILE_EXT="out"
 # 
+# - Default compiler
+#   Supported: gcc, clang
+    _COMPILER="clang"
 
 
 usage () {
@@ -32,22 +35,45 @@ print_status() {
   printf "crunch: $1\n";
 }
 
+compile() {
+  if [[ "$_COMPILER" =~ ^("gcc"|"clang")$ ]];
+  then
+    if [ -z $(command -v $_COMPILER) ];
+    then
+      print_status "error: $_COMPILER does not exist on your system."
+      exit 1
+    fi
+    OUTPUT = "./$FILENAME" -o "$FILENAME.$_COMPILE_EXT"
+    echo $?
+  
+  else
+    print_status "error: Invalid config value (_COMPILE is \"$_COMPILER\"). Check the script file for errors."
+    exit 1;
+  fi
+}
+
 post_comp() {
   CMD=$1
-  if [ -z "$CMD" ]
+  if [ -z "$CMD" ];
   then
     printf "What would you like to do with $FILENAME.$_COMPILE_EXT? (r/q)? "
     read -n1;
     CMD=$REPLY
 	fi
 	case $CMD in
-		[Rr]* ) printf "\n"; exec "./$FILENAME.$_COMPILE_EXT";;
+		[Rr]* ) printf "\n"; exec "./$FILENAME.$_COMPILE_EXT"; exit;;
 		[Qq]* ) printf "\n"; exit;;
 		* ) exit;;
 	esac            
 }
 
-if [ -z "$1" ]
+if [ -z _COMPILE_EXT ];
+then
+  print_status "error: Invalid config value (_COMPILE_EXT is \"$_COMPILE_EXT\"). Check the script file for errors."
+  exit 1;
+fi
+
+if [ -z "$1" ];
 then
 	print_status "Invalid parameters.";
 	usage;
@@ -61,20 +87,15 @@ then
 fi
 
 FILENAME=$1;
-OUTPUT=$(gcc "./$FILENAME" -o "$FILENAME.$_COMPILE_EXT")
+compile
 
-if [[ $? -ne 0 ]];
+if [[ $OUTPUT -ne 0 ]];
 then
-  print_status "error: gcc compilation error.";
+  print_status "error: Compilation error.";
   exit 1;
 else
-  print_status "gcc compilation successful.";
+  print_status "Compilation successful.";
 fi
 
-if [[ ! -z $OUTPUT ]]
-then
-  print_status "gcc has some warnings or additional outputs.";
-fi
-
-post_comp $2
+post_comp $2;
 exit 0;
